@@ -2,7 +2,9 @@ module.exports = (sequelize, Sequelize) => {
     return sequelize.define("analysis", {
         id: {
             type: Sequelize.INTEGER,
-            primaryKey: true
+            autoIncrement: true,
+            primaryKey: true,
+            allowNull: false
         },
         parse_id: {
             type: Sequelize.INTEGER
@@ -11,10 +13,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER
         },
         status: {
-            type: Sequelize.BOOLEAN
+            type: Sequelize.STRING
         },
         result: {
-            type: Sequelize.BOOLEAN
+            type: Sequelize.STRING
         }
     });
 };

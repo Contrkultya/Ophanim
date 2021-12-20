@@ -4,12 +4,8 @@ const cors = require("cors");
 
 const app = express();
 const db = require("./models");
-const bcrypt = require("bcryptjs");
-const Role = db.role;
-const User = db.user;
-const Building = db.building;
 
-var corsOptions = {
+const corsOptions = {
     origin: "http://localhost:3000"
 };
 function initial() {

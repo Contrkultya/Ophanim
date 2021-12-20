@@ -27,6 +27,4 @@ db.sequelize = sequelize;
 db.parse = require("./parse.model")(sequelize, Sequelize);
 db.analysis = require("./analysis.model.js")(sequelize, Sequelize);
 
-db.analysis.belongsTo(db.parse);
-
 module.exports = db;
