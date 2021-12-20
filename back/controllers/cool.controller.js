@@ -53,6 +53,7 @@ exports.analyze = async (req, res) => {
             result: ''
         }).then((val) => {
             analId = val.id;
+            return res.status(200).send({msg: 'In progress', analId});
         });
     });
 
@@ -151,7 +152,6 @@ exports.analyze = async (req, res) => {
         });
 
     });
-    return res.status(200).send({msg: 'In progress'});
 };
 
 exports.parsingsById = (req, res) => {
