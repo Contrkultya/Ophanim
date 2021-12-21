@@ -154,7 +154,7 @@ exports.analyze = async (req, res) => {
     });
 };
 
-exports.analysisById = (req, res) => {
+exports.parsingsById = (req, res) => {
     const userId = req.body.user_id;
     const parsings = Analysis.findAll({
         where: {
