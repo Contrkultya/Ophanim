@@ -13,7 +13,7 @@ exports.parse = async (req, res) => {
     let messages = "";
     let messagesOrig = "";
     const response = await vk.api.wall.get({
-        owner_id: req.query.vk_id
+        owner_id: req.body.vk_id
     }).then((result) => {
         result.items.forEach((item) => {
             if (item.text) {
@@ -24,17 +24,19 @@ exports.parse = async (req, res) => {
         translatte(messages, {to: 'en'}).then(async (result) => {
             messages = result.text;
             const user = await vk.api.users.get({
-                user_ids: req.query.vk_id
+                user_ids: req.body.vk_id
             });
             await Parse.create({
-                user_id: req.query.vk_id,
+                user_id: req.body.vk_id,
                 name: user[0].first_name + " " + user[0].last_name,
                 messages: messages,
                 messages_orig: messagesOrig
             }).then((meme) => {
                 res.setHeader('Content-Type', 'application/json');
                 return res.status(201).send({parse_id: meme.id});
-            })
+            }).catch(err => {
+                res.status(500).send({ message: err.message });
+            });
         });
     });
 };
@@ -43,11 +45,11 @@ exports.analyze = async (req, res) => {
     let analId = null;
     Parse.findOne({
         where: {
-            id: req.query.parseId
+            id: req.body.parseId
         }
     }).then(anal => {
         Analysis.create({
-            parse_id: req.query.parseId,
+            parse_id: req.body.parse_id,
             user_id: anal.user_id,
             status: 'Pending',
             result: ''
