@@ -6,5 +6,5 @@ module.exports = function(app) {
     app.get("/api/parsesByid", controller.parsingsById);
     app.get("/api/resByid", controller.resultsById);
     app.get("/api/allResults", controller.allResults);
-    app.get("/status/:id", controller.getStatus);
+    app.get("/api/status/:id", controller.getStatus);
 };

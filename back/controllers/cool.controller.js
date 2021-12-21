@@ -24,10 +24,10 @@ exports.parse = async (req, res) => {
         translatte(messages, {to: 'en'}).then(async (result) => {
             messages = result.text;
             const user = await vk.api.users.get({
-                user_ids: req.body.vk_id
+                user_ids: req.query.vk_id
             });
             const parsing = await Parse.create({
-                user_id: req.body.vk_id,
+                user_id: req.query.vk_id,
                 name: user[0].first_name + " " + user[0].last_name,
                 messages: messages,
                 messages_orig: messagesOrig
@@ -45,10 +45,10 @@ exports.analyze = async (req, res) => {
         where: {
             id: req.query.parseId
         }
-    }).then(user => {
+    }).then(anal => {
         Analysis.create({
             parse_id: req.query.parseId,
-            user_id: user.id,
+            user_id: anal.user_id,
             status: 'Pending',
             result: ''
         }).then((val) => {
@@ -155,42 +155,46 @@ exports.analyze = async (req, res) => {
 };
 
 exports.parsingsById = (req, res) => {
-    const userId = req.body.user_id;
-    const parsings = Analysis.findAll({
+    const userId = req.query.user_id;
+    Analysis.findAll({
         where: {
             user_id: userId
         },
         raw: true
+    }).then (result => {
+        return res.status(200).send(result);
     });
-    return res.status(200).send(parsings);
 };
 
 exports.resultsById = (req, res) => {
-    const userId = req.body.user_id;
-    const parsings = Parse.findAll({
+    const userId = req.query.user_id;
+    Parse.findAll({
         where: {
             user_id: userId
         },
         raw: true
+    }).then((result) => {
+        return res.status(200).send(result);
     });
-    return res.status(200).send(parsings);
 };
 
 exports.getStatus = (req, res) => {
-    const parseId = req.params.id;
-    const parse = Analysis.findOne({
+    const analId = req.params.id;
+    Analysis.findOne({
         where: {
-            user_id: parseId
+            id: analId
         },
         raw: true
-    });
-    return res.status(200).send(parse);
+    }).then((result) => {
+        return res.status(200).send(result);
+    })
 };
 
 exports.allResults = (req, res) => {
-    const parse = Analysis.findAll({
+    Analysis.findAll({
         raw: true
+    }).then((result) => {
+        return res.status(200).send(result);
     });
-    return res.status(200).send(parse);
 };
 
