@@ -16,10 +16,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BLOB
         },
         messages: {
-            type: Sequelize.STRING
+            type: Sequelize.TEXT
         },
         messages_orig: {
-            type: Sequelize.STRING
+            type: Sequelize.TEXT
         }
     });
 };

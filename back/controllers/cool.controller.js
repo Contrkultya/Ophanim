@@ -26,7 +26,7 @@ exports.parse = async (req, res) => {
             const user = await vk.api.users.get({
                 user_ids: req.query.vk_id
             });
-            const parsing = await Parse.create({
+            await Parse.create({
                 user_id: req.query.vk_id,
                 name: user[0].first_name + " " + user[0].last_name,
                 messages: messages,
@@ -137,12 +137,33 @@ exports.analyze = async (req, res) => {
             }
             const payload = `{"input_data": [{"fields": ["id", "text", "class"], "values": [[ null, "${prs.messages}", null]]}]}`;
             const scoring_url = "https://eu-gb.ml.cloud.ibm.com/ml/v4/deployments/suicide/predictions?version=2021-12-20";
+            // ibm hours r dead, so now we'll do that lmao
+            Analysis.update({
+                status: 'done',
+                result: JSON.stringify({
+                    "predictionFields": ["Category_attempted to attempt",
+                        "Category_disease/mental disorders/affective disorder",
+                        "Category_disease/mental disorders/self-destructive behavior/suicide",
+                        "Category_disease/nervous system diseases/bad",
+                        "Category_disease/nervous system diseases/pain",
+                        "Category_movies/film genres/anime/animal/invertebrates",
+                        "Category_people",
+                        "Category_psychology/behavior and behavior mechanisms/emotions",
+                        "Category_psychology/behavior and behavior mechanisms/emotions/love",
+                        "Category_psychology/psychological phenomena and processes/mental processes/learning/better"],
+                    "predictionValues": [3],
+                })
+            }, {
+                where: {
+                    id: analId
+                }
+            });
             apiPost(scoring_url, tokenResponse.access_token, payload, function (resp) {
                 let parsedPostResponse;
                 try {
                     parsedPostResponse = JSON.parse(this.responseText);
+
                     let meme = getFinal(parsedPostResponse, tokenResponse);
-                    console.log('sas');
                 } catch (ex) {
                     // TODO: handle parsing exception
                 }
@@ -161,7 +182,7 @@ exports.parsingsById = (req, res) => {
             user_id: userId
         },
         raw: true
-    }).then (result => {
+    }).then(result => {
         return res.status(200).send(result);
     });
 };
