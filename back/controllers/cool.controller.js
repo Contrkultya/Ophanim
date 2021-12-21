@@ -151,7 +151,7 @@ exports.analyze = async (req, res) => {
                         "Category_psychology/behavior and behavior mechanisms/emotions",
                         "Category_psychology/behavior and behavior mechanisms/emotions/love",
                         "Category_psychology/psychological phenomena and processes/mental processes/learning/better"],
-                    "predictionValues": [Array.from({length: 10}, () => Math.random())],
+                    "predictionValues": [Array.from({length: 10}, () => Math.floor(Math.random()))],
                 })
             }, {
                 where: {
