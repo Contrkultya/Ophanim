@@ -154,9 +154,20 @@ exports.analyze = async (req, res) => {
     });
 };
 
-exports.parsingsById = (req, res) => {
+exports.analysisById = (req, res) => {
     const userId = req.body.user_id;
     const parsings = Analysis.findAll({
+        where: {
+            user_id: userId
+        },
+        raw: true
+    });
+    return res.status(200).send(parsings);
+};
+
+exports.resultsById = (req, res) => {
+    const userId = req.body.user_id;
+    const parsings = Parse.findAll({
         where: {
             user_id: userId
         },
@@ -175,3 +186,11 @@ exports.getStatus = (req, res) => {
     });
     return res.status(200).send(parse);
 };
+
+exports.allResults = (req, res) => {
+    const parse = Analysis.findAll({
+        raw: true
+    });
+    return res.status(200).send(parse);
+};
+
