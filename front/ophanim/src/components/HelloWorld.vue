@@ -10,6 +10,8 @@
       <button style="margin-top: 5px;" @click.prevent="parseVk"  >Submit!
       </button>
     </form>
+    <br>
+    {{responce}}
   </div>
 </template>
 
@@ -24,7 +26,8 @@ export default {
   data() {
     return  {
       vkId: '',
-      parseId: ''
+      parseId: '',
+      responce: {}
     }
   },
   methods:  {
@@ -34,8 +37,11 @@ export default {
               .then((response) => {
                 this.parseId = response.data.parse_id;
                 axios.post("http://localhost:8081/api/analyze", {parse_id : this.parseId})
-                        .then((response) => {
-                          // wait, show output
+                        .then(() => {
+                          axios.post("http://localhost:8081/api/allResults", {parse_id : this.parseId})
+                                  .then((response) => {
+                                      this.result = response.data.result;
+                                  })
                         })
               })
               .catch(function (error) {
